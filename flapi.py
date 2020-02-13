@@ -1,6 +1,13 @@
-import sys
+import flask
+from flask import request, jsonify
+from flask_cors import CORS
 
-def converts(nombre): #Cette fonction convertie des nombres de chiffre en lettre
+app = flask.Flask(__name__)
+CORS(app)
+app.config["DEBUG"] = True
+
+
+def converts(nombre=0): #Cette fonction convertie des nombres de chiffre en lettre
     if nombre==1: return 'un'
     elif nombre==2: return 'deux'
     elif nombre==3: return 'trois'
@@ -35,7 +42,7 @@ def converts(nombre): #Cette fonction convertie des nombres de chiffre en lettre
         elif 1000<nombre<1000000: return mille(nombre)
         elif 1000000<nombre<1000000000: return million(nombre)
         else: exit('Out of range')
-    else: return ''
+    else: return 'Invalid'
 
 
 def dix(nombre):
@@ -119,33 +126,24 @@ def million(nombre):
             return converts(pref) + ' millions'
 
 
-# print(converts(int(raw_input('entrer votre nombre: '))))
+
+@app.route('/', methods=['GET'])
+def home():
+    return '''<h1>Convertisseur de Nombres</h1>
+<p>Programme pour convertir les chiffres en lettres.</p>'''
 
 
-if __name__ == '__main__':
-    'All python programs begin from here, this is the declaration of start'
-    """
-    print(" \n                      (0 0)")
-    print("\n -----------oo0--------------------------------")
-    print(" |   Number Converter - [ Digits to letters ] |")
-    print(" -----------------------------------0oo--------")
-    print("                      _| |_")
-    print('\n\n')
+@app.route('/api/convert', methods=['GET'])
+def api_all():
+    if 'value' in request.args:
+        value = int(request.args['value'])
+    else:
+        return "Error: No value field provided. Please specify a value."
+        
+    return converts(value), 200
 
-    # get user's input
-    user_in = raw_input('Entrer votre nombre: ')
+@app.errorhandler(404)
+def page_not_found(e):
+    return "<h1>404</h1><p>The resource could not be found.</p>", 404
 
-    # removes spaces from number and convert to int
-    user_in = user_in.replace(' ', '')
-    user_in = int(user_in)
-
-    # calling the function to convert the number 
-    nbr_in_letters = converts(user_in)
-
-    # output the result 
-    print("\n ---Results--------------------------------------")
-    print(" Digits : " + str(user_in) + "\n Letters : " + nbr_in_letters)
-    """
-    nbr_to_convert = sys.argv[1]
-    print(nbr_to_convert)
-    print(converts(int(nbr_to_convert)))
+app.run()
