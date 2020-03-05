@@ -125,6 +125,29 @@ def million(nombre):
         elif suf == 0 :
             return converts(pref) + ' millions'
 
+def milliard(nombre):
+    if  1000000000 < nombre < 10000000000 :
+        pref=int(str(nombre)[0])
+        suf= int(str(nombre)[1:])
+        if 1 <= pref <= 9 :
+            if suf != 0 :
+                return converts(pref) + ' milliard ' + converts(suf)
+            else :
+                return converts(pref) + ' milliards'
+    elif 10000000000 <= nombre < 100000000000 :
+        pref=int(str(nombre)[0: 2])
+        suf= int(str(nombre)[2:])
+        if suf != 0 :
+            return converts(pref) + ' milliard ' + converts(suf)
+        elif suf == 0 :
+            return converts(pref) + ' milliards'
+    elif 100000000000 <= nombre < 1000000000000 :
+        pref=int(str(nombre)[0: 3])
+        suf= int(str(nombre)[3:])
+        if suf != 0 :
+            return converts(pref) + ' milliard ' + converts(suf)
+        elif suf == 0 :
+            return converts(pref) + ' milliards'
 
 
 @app.route('/', methods=['GET'])
